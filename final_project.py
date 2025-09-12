@@ -3,16 +3,17 @@ import requests
 
 st.set_page_config(page_title="Nearby IT Jobs", page_icon="💼", layout="wide")
 
+# CSS for styling including dark mode fix
 st.markdown("""
 <style>
 .header { font-size:45px; font-weight:bold; color:black; text-align:center; margin-bottom:10px; }
 .subheader { font-size:22px; color:gray; text-align:center; margin-bottom:30px; }
-.company-card { border-radius:12px; padding:20px; margin-bottom:20px; box-shadow:0 4px 15px rgba(0,0,0,0.1); background-color:#ffffff; }
+.company-card { border-radius:12px; padding:20px; margin-bottom:20px; box-shadow:0 4px 15px rgba(0,0,0,0.1); background-color:#ffffff; color:#000000; }
 .apply-btn { background-color:#4CAF50; color:white; border:none; padding:5px 10px; border-radius:6px; text-decoration:none; font-weight:bold; margin-right:5px; font-size:14px; }
 .apply-btn:hover { background-color:#45a049; }
 .profile-btn { background-color:#007BFF; color:white; border:none; padding:5px 10px; border-radius:6px; text-decoration:none; font-weight:bold; margin-right:5px; font-size:14px; }
 .profile-btn:hover { background-color:#0056b3; }
-body { background: #f0f2f6; }
+body { background: #f0f2f6; color:#000000; }
 </style>
 """, unsafe_allow_html=True)
 
@@ -87,7 +88,7 @@ if city_input:
         for job in jobs_list:
             job_items = "".join([f'<li>{j["title"]} — <a href="{j["apply"]}" target="_blank" class="apply-btn">Apply here</a></li>' for j in job['jobs']])
             
-            # 🔗 Direct Google search for company
+            # Direct Google search for company
             company_profile_url = f"https://www.google.com/search?q={job['company']} official site"
             
             st.markdown(f"""
