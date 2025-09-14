@@ -45,7 +45,7 @@ body, .stApp {
 .instruction {
     font-size: 14px;
     color: #111 !important;
-    margin-bottom: -8px;  /* closer to city input */
+    margin-bottom: -8px;
     text-align: left;
 }
 
@@ -151,11 +151,11 @@ st.markdown('<p class="instruction">Enter your city e.g., Bangalore, Delhi...</p
 
 # ========================= City input and Job type =========================
 city_input = st.text_input("", placeholder="🏙️ Enter here…")
-job_type = st.selectbox("Select job type:", ["All", "Internship", "Full-time"], index=0, format_func=lambda x: f"{x}")
+job_type = st.selectbox("Select job type:", ["All", "Internship", "Full-time"], index=0)
 
-# ========================= API Keys =========================
-app_id = "3ce16951"
-app_key = "e915c9b51f3fab1a160272b0a66bd143"
+# ========================= API Keys from Secrets =========================
+app_id = st.secrets["ADZUNA_APP_ID"]
+app_key = st.secrets["ADZUNA_APP_KEY"]
 
 # ========================= Fetch jobs =========================
 def fetch_jobs(city, job_type_filter, max_pages=5):
@@ -171,13 +171,14 @@ def fetch_jobs(city, job_type_filter, max_pages=5):
         }
         try:
             res = requests.get(url, params=params, timeout=5)
+            res.raise_for_status()
             data = res.json()
             jobs = data.get("results", [])
             if not jobs:
                 break
             all_jobs.extend(jobs)
-        except:
-            st.error("Error fetching jobs! Try again later.")
+        except requests.exceptions.RequestException as e:
+            st.error(f"Error fetching jobs: {e}")
             break
 
     companies = {}
